@@ -17,12 +17,39 @@ public class Main extends HttpServlet {
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
       throws ServletException, IOException {
 
-    if (req.getMethod().equals("POST")) processPost(req, resp);
-    else if (req.getRequestURI().endsWith("/db")) {
+    if (req.getRequestURI().endsWith("/db")) {
       showDatabase(req,resp);
     } else {
       showHome(req,resp);
     }
+  }
+
+  @Override
+  protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    throws ServletException, IOException {
+
+    StringBuffer jb = new StringBuffer();
+    String line = null;
+    try {
+      BufferedReader reader = request.getReader();
+      while ((line = reader.readLine()) != null)
+        jb.append(line);
+    } catch (Exception e) { /*report an error*/ }
+
+    try {
+      JSONObject jsonObject = new JSONObject(jb.toString());
+      response.getWriter().print(jsonObject.toString());
+    } catch (JSONException e) {
+		// TODO Auto-generated catch block
+    	throw new IOException("Error parsing JSON request string");
+	}
+
+    // Work with the data using methods like...
+    // int someInt = jsonObject.getInt("intParamName");
+    // String someString = jsonObject.getString("stringParamName");
+    // JSONObject nestedObj = jsonObject.getJSONObject("nestedObjName");
+    // JSONArray arr = jsonObject.getJSONArray("arrayParamName");
+    // etc...
   }
 
   private void showHome(HttpServletRequest req, HttpServletResponse resp)
@@ -50,34 +77,6 @@ public class Main extends HttpServlet {
       resp.getWriter().print("There was an error: " + e.getMessage());
     }
   }
-  
-  private void processPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-
-    StringBuffer jb = new StringBuffer();
-    String line = null;
-    try {
-      BufferedReader reader = request.getReader();
-      while ((line = reader.readLine()) != null)
-        jb.append(line);
-    } catch (Exception e) { /*report an error*/ }
-
-    try {
-      JSONObject jsonObject = new JSONObject(jb.toString());
-      response.getWriter().print(jsonObject.toString());
-    } catch (JSONException e) {
-		// TODO Auto-generated catch block
-    	throw new IOException("Error parsing JSON request string");
-	}
-
-    // Work with the data using methods like...
-    // int someInt = jsonObject.getInt("intParamName");
-    // String someString = jsonObject.getString("stringParamName");
-    // JSONObject nestedObj = jsonObject.getJSONObject("nestedObjName");
-    // JSONArray arr = jsonObject.getJSONArray("arrayParamName");
-    // etc...
-  }
-
 
   private Connection getConnection() throws URISyntaxException, SQLException {
     URI dbUri = new URI(System.getenv("DATABASE_URL"));
