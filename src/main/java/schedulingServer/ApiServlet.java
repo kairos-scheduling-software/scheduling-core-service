@@ -27,6 +27,7 @@ public class ApiServlet extends HttpServlet {
 		String uri = request.getPathInfo();
 		boolean isCreate;
 		
+		if (uri == null) throw new IllegalArgumentException("Invalid path for post method");
 		if (uri.endsWith("/")) uri = uri.substring(0, uri.length() - 1);
 		if (uri.equals("/new")) {
 			isCreate = true;
