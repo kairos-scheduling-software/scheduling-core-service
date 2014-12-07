@@ -1,1 +1,1 @@
-web:    java -cp target/classes:target/dependency/* Main
+web:    java $JAVA_OPTS -jar target/scheduling-1.0.jar

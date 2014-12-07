@@ -1,3 +1,5 @@
+package schedulingServer;
+
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
@@ -6,7 +8,6 @@ import org.eclipse.jetty.servlet.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.*;
-import java.text.ParseException;
 import java.util.ArrayList;
 
 import org.json.JSONException;
@@ -29,50 +30,9 @@ public class Main extends HttpServlet {
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		
-		boolean isCreate;
-
-		if (request.getRequestURI().toLowerCase().equals("/api/new")) {
-			isCreate = true;
-		} else if (request.getRequestURI().toLowerCase().equals("/api/check")) {
-			isCreate = false;
-		}  else {
-			throw new IllegalArgumentException("Invalid path for post message");
-		}
+		String msg = "Visit kairos-api-docs.eu1.frbit.net for post method's target url";
 		
-		JSONObject jsonBody, jsonResponse = null;
-		StringBuffer jb = new StringBuffer();
-		String line = null;
-		try {
-			BufferedReader reader = request.getReader();
-			while ((line = reader.readLine()) != null)
-				jb.append(line);
-		} catch (Exception e) { /* report an error */
-		}
-
-		try {
-			jsonBody = new JSONObject(jb.toString());
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			throw new IOException("Error parsing JSON request string");
-		}
-		
-		try {
-			if (isCreate) {
-				jsonResponse = generateSchedule(jsonBody);
-			} else {
-				jsonResponse = checkSchedule(jsonBody);
-			}
-		} catch (JSONException e) {
-			throw new IOException("Encountered JSONexception");
-		}
-		response.getWriter().print(jsonResponse.toString());
-
-		// Work with the data using methods like...
-		// int someInt = jsonObject.getInt("intParamName");
-		// String someString = jsonObject.getString("stringParamName");
-		// JSONObject nestedObj = jsonObject.getJSONObject("nestedObjName");
-		// JSONArray arr = jsonObject.getJSONArray("arrayParamName");
-		// etc...
+		response.getWriter().print(msg);
 	}
 
 	private void showHome(HttpServletRequest req, HttpServletResponse resp)
@@ -101,17 +61,6 @@ public class Main extends HttpServlet {
 		}
 	}
 
-	private JSONObject generateSchedule(JSONObject data) {
-		return data;
-	}
-
-	private JSONObject checkSchedule(JSONObject data) throws JSONException {
-		JSONObject res = new JSONObject();
-		res.put("unsatisfiedSoft", new ArrayList<String>());
-		res.put("unsatisfiedHard", new ArrayList<String>());
-		return res;
-	}
-
 	private Connection getConnection() throws URISyntaxException, SQLException {
 		URI dbUri = new URI(System.getenv("DATABASE_URL"));
 
@@ -129,6 +78,7 @@ public class Main extends HttpServlet {
 		context.setContextPath("/");
 		server.setHandler(context);
 		context.addServlet(new ServletHolder(new Main()), "/*");
+		context.addServlet(new ServletHolder(new ApiServlet()), "/api/*");
 		server.start();
 		server.join();
 	}
