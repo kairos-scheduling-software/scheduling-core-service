@@ -74,11 +74,16 @@ public class ApiServlet extends HttpServlet {
 		// JSONArray arr = jsonObject.getJSONArray("arrayParamName");
 		// etc...
 		
+		System.out.println("Get request for creating new schedule: " + data.toString())
+		
 		return data;
 	}
 
 	private JSONObject checkSchedule(JSONObject data) throws JSONException {
 		JSONObject res = new JSONObject();
+		
+		System.out.println("Get request for checking schedule conflict: " + data.toString())
+		
 		res.put("unsatisfiedSoft", new ArrayList<String>());
 		res.put("unsatisfiedHard", new ArrayList<String>());
 		return res;

@@ -8,11 +8,6 @@ import org.eclipse.jetty.servlet.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.*;
-import java.util.ArrayList;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-import java.io.BufferedReader;
 
 public class Main extends HttpServlet {
 	@Override
