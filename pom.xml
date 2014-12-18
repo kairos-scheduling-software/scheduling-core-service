@@ -7,6 +7,14 @@
   <version>1.0</version>
   <artifactId>scheduling</artifactId>
   <packaging>jar</packaging>
+  <repositories>
+    <!--other repositories if any-->
+    <repository>
+      <id>project.local</id>
+      <name>project</name>
+      <url>file:${project.basedir}/repo</url>
+    </repository>
+  </repositories>
   <dependencies>
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
@@ -27,6 +35,11 @@
       <groupId>org.json</groupId>  
       <artifactId>json</artifactId>  
       <version>20090211</version> 
+    </dependency>
+    <dependency>
+      <groupId>choco</groupId>
+      <artifactId>choco-solver</artifactId>
+      <version>3.2.2</version>
     </dependency>
   </dependencies>
   <build>

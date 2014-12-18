@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import scheduler.Scheduler;
+
 public class ApiServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -63,10 +65,14 @@ public class ApiServlet extends HttpServlet {
 		} catch (JSONException e) {
 			throw new IOException("Encountered JSONexception");
 		}
-		response.getWriter().print(jsonResponse.toString());
+		if (jsonResponse != null)
+			response.getWriter().print(jsonResponse.toString());
+		else {
+			response.getWriter().print("Error: Can't generate schedule");
+		}
 	}
 	
-	private JSONObject generateSchedule(JSONObject data) {
+	private JSONObject generateSchedule(JSONObject data) throws JSONException {
 		// Work with the data using methods like...
 		// int someInt = jsonObject.getInt("intParamName");
 		// String someString = jsonObject.getString("stringParamName");
@@ -76,7 +82,12 @@ public class ApiServlet extends HttpServlet {
 		
 		System.out.println("Get request for creating new schedule: " + data.toString());
 		
-		return data;
+		Scheduler scheduler = new Scheduler(data);
+		
+		if (scheduler.findSolution())
+			return scheduler.getSolution();
+		
+		return null;
 	}
 
 	private JSONObject checkSchedule(JSONObject data) throws JSONException {
