@@ -21,7 +21,7 @@ import solver.variables.*;
 public class ClassEvent {
 	int id = 0;
 	String name = "";
-	String professor = "";
+	int professor = 0;
 
 	int days_count;
 	int duration;
@@ -44,20 +44,20 @@ public class ClassEvent {
 	public ClassEvent(Solver _solver, int[] _roomIds, JSONObject jsonClass) throws JSONException {
 		this.solver = _solver;
 		
-		//this.id = jsonClass.getInt("id");
-		this.name = jsonClass.getString("name");
-		this.professor = jsonClass.getString("professor");
+		this.id = jsonClass.getInt("id");
+		//this.name = jsonClass.getString("name");
+		this.professor = jsonClass.getInt("persons");
 		
-		this.days_count = jsonClass.getInt("days");
+		this.days_count = jsonClass.getInt("days_count");
 		this.duration = jsonClass.getInt("duration");
 		
-		this.capacity = VariableFactory.fixed(jsonClass.getInt("capacity"), this.solver);
+		this.capacity = VariableFactory.fixed(jsonClass.getInt("max_participants"), this.solver);
 		this.roomId = VariableFactory.enumerated("room id", _roomIds, this.solver);
 		
 		this.initStartTime();
 	}
 	
-	public ClassEvent(Solver _solver, int[] _roomIds, int _capacity, String _professor,
+	public ClassEvent(Solver _solver, int[] _roomIds, int _capacity, int _professor,
 			int _days, int _duration) {
 		solver = _solver;
 		professor = _professor;
@@ -194,12 +194,6 @@ public class ClassEvent {
 	public String getRoom(Room[] rooms) {
 		int roomId = this.roomId.getValue();
 		String roomStr = Integer.toString(roomId);
-		for (Room room : rooms) {
-			if (room.id == roomId) {
-				roomStr = room.name;
-				break;
-			}
-		}
 		
 		return roomStr;
 	}

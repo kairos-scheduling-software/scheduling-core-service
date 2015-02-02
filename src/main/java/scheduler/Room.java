@@ -13,25 +13,18 @@ import static scheduler.Utils.*;
 
 public class Room {
 	public int id;
-	public String name;
 	
 	public int capacity;
 	public TimeBlock[] timeBlock;
 	
-	public Room(int _id, JSONObject jsonObj) throws JSONException {
-		this.id = _id;
-		this.name = jsonObj.getString("name");
+	public Room(JSONObject jsonObj) throws JSONException {
+		this.id = jsonObj.getInt("id");
 		this.capacity = jsonObj.getInt("capacity");
-		this.timeBlock = TimeBlock.parseTimeBlock(jsonObj.getJSONArray("time"));
+		//this.timeBlock = TimeBlock.parseTimeBlock(jsonObj.getJSONArray("times"));
 	}
 	
 	public Room(int _id, int _capacity, TimeBlock[] _timeBlock) {
-		this(_id, "", _capacity, _timeBlock);
-	}
-	
-	public Room(int _id, String _name, int _capacity, TimeBlock[] _timeBlock) {
 		this.id = _id;
-		this.name = _name;
 		this.capacity = _capacity;
 		this.timeBlock = _timeBlock;
 	}
@@ -39,7 +32,6 @@ public class Room {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		Formatter formatter = new Formatter(sb, Locale.US);
-		formatter.format("Room: %s", this.name);
 		formatter.format("\n\tID: %d, capacity: %d", this.id, this.capacity);
 		for (TimeBlock block : timeBlock) {
 			formatter.format("\n\t%s: %s - %s", block.getDay(),
@@ -53,7 +45,7 @@ public class Room {
 		// TODO: Fill up parseRooms method
 		Room[] rooms = new Room[jsonObj.size()];
 		for (int i = 0; i < rooms.length; i++) {
-			rooms[i] = new Room(i, jsonObj.get(i));
+			rooms[i] = new Room(jsonObj.get(i));
 		}
 		return rooms;
 	}

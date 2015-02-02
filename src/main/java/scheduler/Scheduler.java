@@ -34,18 +34,15 @@ public class Scheduler {
 		ArrayList<JSONObject> jsonRooms = new ArrayList<JSONObject>();
 		// ArrayList<JSONObject> jsonProfs;
 		
-		jsonClasses = jsonObj.getJSONArray("events");
-		jsonResources = jsonObj.getJSONArray("resources");
+		jsonClasses = jsonObj.getJSONArray("EVENT");
+		jsonResources = jsonObj.getJSONArray("SPACE");
 		
 		//jsonProfs = new ArrayList<JSONObject>();
 		for (int i = 0; i < jsonResources.length(); i++) {
 			JSONObject obj = jsonResources.getJSONObject(i);
-			if (obj.getString("type").equals("room")) {
-				jsonRooms.add(obj);
-			}
+			jsonRooms.add(obj);
 		}
 		
-		this.name = jsonObj.getString("name");
 		this.solver = new Solver(this.name);
 		this.rooms = Room.parseRooms(jsonRooms);
 		int[] roomIds = new int[this.rooms.length];
@@ -142,10 +139,10 @@ public class Scheduler {
 			roomIds[i] = rooms[i].id;
 		}
 		
-		classes[0] = new ClassEvent(solver, roomIds, 60, "prof1", 2, 170);
-		classes[1] = new ClassEvent(solver, roomIds, 50, "prof2", 3, 50);
-		classes[2] = new ClassEvent(solver, roomIds, 50, "prof3", 2, 170);
-		classes[3] = new ClassEvent(solver, roomIds, 40, "prof4", 2, 50);
+		classes[0] = new ClassEvent(solver, roomIds, 60, 1, 2, 170);
+		classes[1] = new ClassEvent(solver, roomIds, 50, 2, 3, 50);
+		classes[2] = new ClassEvent(solver, roomIds, 50, 3, 2, 170);
+		classes[3] = new ClassEvent(solver, roomIds, 40, 4, 2, 50);
 		
 		return classes;
 	}
